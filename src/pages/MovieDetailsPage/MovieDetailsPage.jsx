@@ -1,15 +1,17 @@
 import { Loader } from 'components/Loader/Loader';
 import css from './MovieDetailsPage.module.css';
 import { Suspense, useEffect, useRef, useState } from 'react';
-import { Link, useParams, Outlet } from 'react-router-dom';
+import { Link, useParams, Outlet, useLocation } from 'react-router-dom';
 import { getImg, getMovieDetails } from 'services/moviesAPI';
 
 export default function MovieDetails() {
+  const location = useLocation();
   const [movie, setMovie] = useState({});
   const [genres, setGenres] = useState('');
   const [image, setImage] = useState('');
   const { movieID } = useParams();
-  const goBack = useRef();
+
+  const goBack = useRef(location.state?.from ?? '/');
 
   useEffect(() => {
     getMovieDetails(movieID).then(data => {
@@ -17,7 +19,7 @@ export default function MovieDetails() {
       setGenres(() => data.data.genres.map(genre => genre.name).join(', '));
       setImage(getImg(data.data.poster_path, 'w342'));
     });
-  }, [movieID]);
+  }, [location, movieID]);
 
   return (
     <div className={css.details}>
