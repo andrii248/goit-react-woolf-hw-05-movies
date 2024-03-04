@@ -3,11 +3,11 @@ import css from './MoviesPage.module.css';
 
 import Notiflix from 'notiflix';
 import { searchMovies } from '../../services/moviesAPI';
-import { useSearchParams, useLocation, Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Searchbar } from 'components/Searchbar/Searchbar';
+import MoviesList from 'components/MoviesList/MoviesList';
 
 export default function Movies() {
-  const location = useLocation();
   const [movies, setMovies] = useState([]);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -23,10 +23,6 @@ export default function Movies() {
       return;
     }
 
-    if (query === '') {
-      Notiflix.Notify.warning('Please enter the name of the movie to search');
-      return;
-    }
     searchMovies(query).then(data => {
       if (data.data.total_results === 0) {
         Notiflix.Notify.failure(`Oops! No movie found containing ${query}`);
@@ -43,23 +39,7 @@ export default function Movies() {
   return (
     <div className={css.movies}>
       <Searchbar onSubmit={onFormSubmit} />
-      {movies.length > 0 && (
-        <div>
-          <ul className={css.list}>
-            {movies.map(movie => (
-              <li key={movie.id}>
-                <Link
-                  className={css.link}
-                  to={`/movies/${movie.id}`}
-                  state={{ from: location }}
-                >
-                  {movie.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {movies.length > 0 && <MoviesList moviesList={movies} />}
     </div>
   );
 }

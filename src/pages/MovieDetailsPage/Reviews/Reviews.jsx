@@ -16,7 +16,7 @@ export default function Reviews() {
   }, [movieID]);
 
   return typeof reviews === 'string' ? (
-    reviews
+    <p>{reviews}</p>
   ) : (
     <ul className={css.list}>
       {reviews.map(review => {

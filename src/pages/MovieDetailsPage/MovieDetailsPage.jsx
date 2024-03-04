@@ -1,15 +1,15 @@
 import { Loader } from 'components/Loader/Loader';
 import css from './MovieDetailsPage.module.css';
-import { Suspense, useEffect, useState } from 'react';
-import { Link, useLocation, useParams, Outlet } from 'react-router-dom';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import { Link, useParams, Outlet } from 'react-router-dom';
 import { getImg, getMovieDetails } from 'services/moviesAPI';
 
 export default function MovieDetails() {
-  const location = useLocation();
   const [movie, setMovie] = useState({});
   const [genres, setGenres] = useState('');
   const [image, setImage] = useState('');
   const { movieID } = useParams();
+  const goBack = useRef();
 
   useEffect(() => {
     getMovieDetails(movieID).then(data => {
@@ -21,10 +21,8 @@ export default function MovieDetails() {
 
   return (
     <div className={css.details}>
-      <Link to={location?.state?.from ?? '/'} className={css.link}>
-        <button type="button" className={css.backBtn}>
-          Go back
-        </button>
+      <Link to={goBack.current} className={css.link}>
+        Go back
       </Link>
 
       <div className={css.wrap}>
@@ -43,21 +41,13 @@ export default function MovieDetails() {
         <h2>Additional Info</h2>
         <ul className={css.list}>
           <li className={css.item}>
-            <Link
-              to="cast"
-              state={{ from: location?.state?.from ?? '/' }}
-              className={css.link}
-            >
+            <Link to="cast" className={css.link}>
               Cast
             </Link>
           </li>
 
           <li className={css.item}>
-            <Link
-              to="reviews"
-              state={{ from: location?.state?.from ?? '/' }}
-              className={css.link}
-            >
+            <Link to="reviews" className={css.link}>
               Reviews
             </Link>
           </li>

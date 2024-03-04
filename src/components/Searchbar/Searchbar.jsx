@@ -1,6 +1,7 @@
 import css from './Searchbar.module.css';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import Notiflix from 'notiflix';
 
 export function Searchbar({ onSubmit }) {
   const [searchParams] = useSearchParams();
@@ -8,6 +9,12 @@ export function Searchbar({ onSubmit }) {
 
   function formSubmit(e) {
     e.preventDefault();
+
+    if (searchQuery === '' || searchQuery === null) {
+      Notiflix.Notify.warning('Please enter the name of the movie to search');
+      return;
+    }
+
     onSubmit(searchQuery);
   }
 
